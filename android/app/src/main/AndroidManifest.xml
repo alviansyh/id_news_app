@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.devalvin.id_news_app">
    <application
-        android:label="ID News"
-        android:icon="@mipmap/ic_launcher">
+        android:label="IDN News"
+        android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
