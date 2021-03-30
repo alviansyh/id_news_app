@@ -1,63 +1,53 @@
 import 'package:flutter/material.dart';
+import 'package:id_news_app/shared/shared.dart';
+import 'package:id_news_app/pages/pages.dart';
 
 void main() => {
   runApp(MyApp())
 };
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'News App',
+      theme: ThemeData(
+        primaryColor: primaryColor,
+        accentColor: secondaryColor,
+        textTheme: myTextTheme,
+        primarySwatch: Colors.blueGrey,
+        scaffoldBackgroundColor: Colors.white,
+        appBarTheme: AppBarTheme(
+          textTheme: myTextTheme.apply(bodyColor: Colors.black),
+          elevation: 0,
+        ),
+        buttonTheme: ButtonThemeData(
+          buttonColor: secondaryColor,
+          textTheme: ButtonTextTheme.primary,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(0),
+            ),
+          ),
+        ),
+        bottomNavigationBarTheme: BottomNavigationBarThemeData(
+          selectedItemColor: secondaryColor,
+          unselectedItemColor: Colors.grey,
+        ),
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
       debugShowCheckedModeBanner: false,
-      home: MainPage()
-    );
-  }
-}
-
-class MainPage extends StatefulWidget {
-  @override
-  _MainPageState createState() => _MainPageState();
-}
-
-class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-
-    if(state == AppLifecycleState.inactive){
-      print("====> INACTIVE <====");
-    }
-
-    if(state == AppLifecycleState.paused){
-      print("====> PAUSED <====");
-    }
-
-    if(state == AppLifecycleState.resumed){
-      print("====> RESUMED <====");
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Welcome to Flutter'),
-      ),
-      body: Center(
-        child: Text('Hello World'),
-      ),
+      initialRoute: HomePage.routeName,
+      routes: {
+        HomePage.routeName: (context) => HomePage(),
+        ArticleDetailPage.routeName: (context) => ArticleDetailPage(
+          article: ModalRoute.of(context).settings.arguments,
+        ),
+        ArticleWebView.routeName: (context) =>
+            ArticleWebView(url: ModalRoute.of(context).settings.arguments),
+      },
     );
   }
 }
