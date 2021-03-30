@@ -1,52 +1,63 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import './src/bloc/simple_bloc_observer.dart';
-import './src/commonWidget/bloc/bloc.dart';
-import './src/theme/bloc/theme_bloc.dart';
-import './src/theme/bloc/theme_state.dart';
-import './src/theme/theme.dart';
-import 'src/helpers/routes.dart';
-import 'src/pages/homePage/bloc/bloc.dart';
-import 'src/pages/newsDetail/bloc/bloc.dart';
-import 'src/resources/repository.dart';
 
-void main() {
-  Bloc.observer = SimpleBlocDelegate();
-  runApp(MyApp());
-}
+void main() => {
+  runApp(MyApp())
+};
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    ThemeData apptheme;
-    return MultiBlocProvider(
-        providers: [
-          BlocProvider<NewsBloc>(
-            create: (context) =>
-                NewsBloc(repository: Repository())..add(Fetch(type: 'General')),
-          ),
-          BlocProvider<DetailBloc>(create: (context) => DetailBloc()),
-          BlocProvider<NavigationBloc>(create: (context) => NavigationBloc()),
-          BlocProvider<ThemeBloc>(create: (context) => ThemeBloc()),
-        ],
-        child: BlocBuilder<ThemeBloc, ThemeState>(
-          builder: (context, state) {
-            if (state is SelectedTheme) {
-              apptheme = state.themeType != ThemeType.Light
-                  ? AppTheme.lightTheme
-                  : AppTheme.darkTheme;
-            }
-            return Builder(
-              builder: (context) {
-                return MaterialApp(
-                  title: 'Flutter Demo',
-                  theme: apptheme,
-                  debugShowCheckedModeBanner: false,
-                  routes: Routes.getRoute(),
-                );
-              },
-            );
-          },
-        ));
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: MainPage()
+    );
+  }
+}
+
+class MainPage extends StatefulWidget {
+  @override
+  _MainPageState createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+
+    if(state == AppLifecycleState.inactive){
+      print("====> INACTIVE <====");
+    }
+
+    if(state == AppLifecycleState.paused){
+      print("====> PAUSED <====");
+    }
+
+    if(state == AppLifecycleState.resumed){
+      print("====> RESUMED <====");
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Welcome to Flutter'),
+      ),
+      body: Center(
+        child: Text('Hello World'),
+      ),
+    );
   }
 }
